@@ -5,6 +5,7 @@ import {
 	getUniforms,
 	renderGl
 } from "./webgl-utils.js"
+import Split from "./split.js"
 
 const $window = $(window)
 const $html = $("html")

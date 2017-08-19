@@ -20,6 +20,13 @@ THE SOFTWARE.*/
 
 /*! Split.js - v1.3.5 */
 
+export {
+	Split as
+	default
+};
+
+var Split;
+
 (function(global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 		typeof define === 'function' && define.amd ? define(factory) :
@@ -101,7 +108,7 @@ THE SOFTWARE.*/
 	// 4. Loop through the elements while pairing them off. Every pair gets an
 	//    `pair` object, a gutter, and special isFirst/isLast properties.
 	// 5. Actually size the pair elements, insert gutters and attach event listeners.
-	var Split = function(ids, options) {
+	Split = function(ids, options) {
 		if (options === void 0) options = {};
 
 		var dimension;
