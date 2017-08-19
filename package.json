@@ -1,0 +1,30 @@
+{
+	"name": "fractal-explorer",
+	"version": "0.0.1",
+	"description": "Renders the Mandelbrot set and Julia sets using WebGL, HTML5 canvas, and JavaScript.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [
+		"Mandelbrot set",
+		"Julia sets",
+		"fractal",
+		"explore",
+		"zoom",
+		"WebGL",
+		"HTML",
+		"canvas",
+		"JavaScript"
+	],
+	"author": "Bennett Zhang",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.15.4"
+	}
+}

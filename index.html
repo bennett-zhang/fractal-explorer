@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Fractal Explorer</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans|Josefin+Slab">
+	<link rel="stylesheet" href="/css/master.css">
+	<link rel="stylesheet" href="/css/jquery-ui.min.css">
+</head>
+
+<body>
+	<div id="mandelbrot-canvas-wrapper" class="split split-horizontal">
+		<h1 class="canvas-text">Mandelbrot</h1>
+		<canvas id="mandelbrot-canvas"></canvas>
+	</div>
+	<div id="julia-canvas-wrapper" class="split split-horizontal">
+		<h1 class="canvas-text">Julia</h1>
+		<canvas id="julia-canvas"></canvas>
+		<div id="julia-constant-text" class=canvas-text></div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" charset="utf-8"></script>
+	<script src="/js/lib/split.js" charset="utf-8"></script>
+	<script src="/js/fractal.js" type="module" charset="utf-8"></script>
+</body>
+
+</html>

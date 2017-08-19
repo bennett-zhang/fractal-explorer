@@ -1,0 +1,66 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.alias * {
+	cursor: alias !important;
+}
+
+.all-scroll * {
+	cursor: all-scroll !important;
+}
+
+.zoom-in * {
+	cursor: zoom-in !important;
+}
+
+.zoom-out * {
+	cursor: zoom-out !important;
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal {
+	position: relative;
+	height: 100%;
+	float: left;
+}
+
+.gutter {
+	background-color: #eee;
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+	background-image: url('../img/vertical.png');
+	cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+	background-image: url('../img/horizontal.png');
+	cursor: row-resize;
+}
+
+canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+	cursor: crosshair;
+}
+
+.canvas-text {
+	position: absolute;
+	margin: 0.8em 1.6rem;
+	color: white;
+}
+
+h1.canvas-text {
+	font: 3rem 'Josefin Slab', serif;
+}
+
+#julia-constant-text {
+	bottom: 0;
+	font: 1.2rem 'Josefin Sans', sans-serif;
+}
