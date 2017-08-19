@@ -21,6 +21,10 @@ html, body {
 	cursor: zoom-out !important;
 }
 
+.github-fork-ribbon:before {
+	background-color: #cf8e59;
+}
+
 .split.split-horizontal, .gutter.gutter-horizontal {
 	position: relative;
 	height: 100%;
