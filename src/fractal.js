@@ -5,10 +5,13 @@ import {
 	getUniforms,
 	renderGl
 } from "./webgl-utils.js"
-import Split from "./split.js"
+import Split from "split.js"
 
 const $window = $(window)
 const $html = $("html")
+
+const $iterationText = $("#iteration-text")
+const $jconstantText = $("#julia-constant-text")
 
 $("#controls-dialog").dialog({
 	show: "drop",
@@ -22,22 +25,10 @@ $("#controls-dialog").dialog({
 	}]
 }).tooltip()
 
-const $jconstantText = $("#julia-constant-text")
-
-function updateJConstantText() {
-	$jconstantText.text(`Showing Julia set for c = ${Julia.constant.real} + ${Julia.constant.imag}i`)
-}
-
-let maxIterations = 200
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
 
-const $iterationText = $("#iteration-text")
-
-function updateIterationText() {
-	$iterationText.text(`Iteration count = ${maxIterations}`)
-}
-updateIterationText()
+let maxIterations = 200
 
 const palette = getPalette([
 	[0, 0x000000],
@@ -53,31 +44,7 @@ const palette = getPalette([
 	[1, 0x000000]
 ], 512)
 
-function initFractal(fractal, canvasSelector, bounds, jconstant) {
-	fractal.$canvas = $(canvasSelector)
-	fractal.canvas = fractal.$canvas[0]
-	fractal.gl = initGl(fractal)
-	fractal.program = initProgram(fractal)
-	fractal.uniforms = getUniforms(fractal, [
-		"realMin",
-		"imagMin",
-		"isJulia",
-		"jconstant",
-		"overCanvas",
-		"maxIterations",
-		"palette"
-	])
-	fractal.bounds = bounds
-	if (jconstant) {
-		fractal.gl.uniform1i(fractal.uniforms.isJulia, true)
-		fractal.constant = jconstant
-		updateJConstantText()
-	}
-	fractal.gl.uniform4fv(fractal.uniforms.palette, palette)
-}
-
-const Mandelbrot = {}
-initFractal(Mandelbrot, "#mandelbrot-canvas", {
+const Mandelbrot = initFractal("#mandelbrot-canvas", {
 	real: {
 		min: null,
 		mid: -0.7,
@@ -93,8 +60,7 @@ initFractal(Mandelbrot, "#mandelbrot-canvas", {
 	overCanvas: null
 })
 
-const Julia = {}
-initFractal(Julia, "#julia-canvas", {
+const Julia = initFractal("#julia-canvas", {
 	real: {
 		min: null,
 		mid: 0,
@@ -112,6 +78,40 @@ initFractal(Julia, "#julia-canvas", {
 	real: -0.77,
 	imag: -0.09
 })
+
+function initFractal(canvasSelector, bounds, jconstant) {
+	const fractal = {}
+	fractal.$canvas = $(canvasSelector)
+	fractal.canvas = fractal.$canvas[0]
+	fractal.gl = initGl(fractal)
+	fractal.program = initProgram(fractal)
+	fractal.uniforms = getUniforms(fractal, [
+		"realMin",
+		"imagMin",
+		"maxIterations",
+		"isJulia",
+		"jconstant",
+		"overCanvas",
+		"palette"
+	])
+	fractal.bounds = bounds
+	if (jconstant) {
+		fractal.gl.uniform1i(fractal.uniforms.isJulia, true)
+		fractal.constant = jconstant
+	}
+	fractal.gl.uniform4fv(fractal.uniforms.palette, palette)
+	return fractal
+}
+
+function updateIterationText() {
+	$iterationText.text(`Iteration count = ${maxIterations}`)
+}
+updateIterationText()
+
+function updateJConstantText() {
+	$jconstantText.text(`Showing Julia set for c = ${Julia.constant.real} + ${Julia.constant.imag}i`)
+}
+updateJConstantText()
 
 function resizeCanvas(fractal) {
 	const {
@@ -172,9 +172,9 @@ function render({
 	gl.uniform1f(uniforms.realMin, bounds.real.min)
 	gl.uniform1f(uniforms.imagMin, bounds.imag.min)
 	gl.uniform1f(uniforms.overCanvas, bounds.overCanvas)
+	gl.uniform1i(uniforms.maxIterations, maxIterations)
 	if (constant)
 		gl.uniform2f(uniforms.jconstant, constant.real, constant.imag)
-	gl.uniform1i(uniforms.maxIterations, maxIterations)
 
 	renderGl(gl)
 }
@@ -188,19 +188,13 @@ function getZFromPixel({
 	}
 }
 
-// @bug iteration count increases for each fractal
-function initKeydown(fractal) {
+function initKeydownBounds(fractal) {
 	const {
 		bounds
 	} = fractal
 
 	$window.keydown(evt => {
 		switch (evt.which) {
-			case 37: // left
-			case 65: // a
-				bounds.real.mid -= bounds.real.range * SCROLL_COEFF
-				calculateBounds(fractal)
-				break
 			case 38: // up
 			case 87: // w
 				if (evt.shiftKey) {
@@ -208,13 +202,12 @@ function initKeydown(fractal) {
 					bounds.imag.range /= ZOOM_COEFF
 				} else
 					bounds.imag.mid += bounds.imag.range * SCROLL_COEFF
-				calculateBounds(fractal)
 				break
-			case 39: // right
-			case 68: //d
-				bounds.real.mid += bounds.real.range * SCROLL_COEFF
-				calculateBounds(fractal)
+			case 37: // left
+			case 65: // a
+				bounds.real.mid -= bounds.real.range * SCROLL_COEFF
 				break
+
 			case 40: // down
 			case 83: // s
 				if (evt.shiftKey) {
@@ -222,12 +215,24 @@ function initKeydown(fractal) {
 					bounds.imag.range *= ZOOM_COEFF
 				} else
 					bounds.imag.mid -= bounds.imag.range * SCROLL_COEFF
-				calculateBounds(fractal)
+
 				break
-			case 48: // 0
-				maxIterations = 1000
-				updateIterationText()
+			case 39: // right
+			case 68: // d
+				bounds.real.mid += bounds.real.range * SCROLL_COEFF
 				break
+		}
+
+		calculateBounds(fractal)
+		render(fractal)
+	})
+}
+initKeydownBounds(Mandelbrot)
+initKeydownBounds(Julia)
+
+function initKeydownIterations() {
+	$window.keydown(evt => {
+		switch (evt.which) {
 			case 49:
 			case 50:
 			case 51:
@@ -237,25 +242,23 @@ function initKeydown(fractal) {
 			case 55:
 			case 56:
 			case 57: // 1-9
-				maxIterations = (evt.which - 48) * 100
-				updateIterationText()
-				break
-			case 187: // +
-				maxIterations += 100
-				console.log(maxIterations)
-				updateIterationText()
+				maxIterations = 100 * Math.pow(2, evt.which - 51)
 				break
 			case 189: // -
 				maxIterations -= 100
-				updateIterationText()
+				maxIterations = Math.max(maxIterations, 0)
+				break
+			case 187: // +
+				maxIterations += 100
 				break
 		}
 
-		render(fractal)
+		updateIterationText()
+		render(Mandelbrot)
+		render(Julia)
 	})
 }
-initKeydown(Mandelbrot)
-initKeydown(Julia)
+initKeydownIterations()
 
 function initMouseDown(fractal) {
 	const {
