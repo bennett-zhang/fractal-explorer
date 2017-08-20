@@ -54,18 +54,19 @@ canvas {
 	cursor: crosshair;
 }
 
-.canvas-text-header {
+.canvas-text {
 	position: absolute;
 	margin: 0.8em 1.6rem;
 	color: white;
+	text-shadow: 0 0 0.3em black;
+}
+
+.canvas-text.canvas-text-header {
 	font: 3rem "Josefin Slab", serif;
 }
 
-.canvas-text-footer {
-	position: absolute;
+.canvas-text.canvas-text-footer {
 	bottom: 0;
-	margin: 0.8em 1.6rem;
-	color: white;
 	font: 1.2rem "Open Sans", sans-serif;
 }
 
