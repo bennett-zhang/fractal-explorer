@@ -150,10 +150,6 @@ function render({
 	bounds,
 	constant
 }) {
-	if (bounds.overCanvas < 1.1920929e-7)
-		console.log(`unrounded: ${bounds.overCanvas.toString(2)}
-rounded:     ${Math.fround(bounds.overCanvas).toString(2)}`)
-
 	gl.uniform1f(uniforms.realMin, bounds.real.min)
 	gl.uniform1f(uniforms.imagMin, bounds.imag.min)
 	gl.uniform1f(uniforms.overCanvas, bounds.overCanvas)
