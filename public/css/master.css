@@ -38,12 +38,12 @@ html, body {
 }
 
 .gutter.gutter-horizontal {
-	background-image: url('../img/vertical.png');
+	background-image: url("../img/vertical.png");
 	cursor: col-resize;
 }
 
 .gutter.gutter-vertical {
-	background-image: url('../img/horizontal.png');
+	background-image: url("../img/horizontal.png");
 	cursor: row-resize;
 }
 
@@ -54,17 +54,30 @@ canvas {
 	cursor: crosshair;
 }
 
-.canvas-text {
+.canvas-text-header {
 	position: absolute;
 	margin: 0.8em 1.6rem;
 	color: white;
+	font: 3rem "Josefin Slab", serif;
 }
 
-h1.canvas-text {
-	font: 3rem 'Josefin Slab', serif;
-}
-
-#julia-constant-text {
+.canvas-text-footer {
+	position: absolute;
 	bottom: 0;
-	font: 1.2rem 'Josefin Sans', sans-serif;
+	margin: 0.8em 1.6rem;
+	color: white;
+	font: 1.2rem "Open Sans", sans-serif;
+}
+
+.ui-widget {
+	font-family: "Open Sans", sans-serif;
+}
+
+#controls-dialog {
+	display: none;
+}
+
+abbr {
+	border-bottom: 1px dotted;
+	text-decoration: none;
 }

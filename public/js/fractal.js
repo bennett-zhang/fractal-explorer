@@ -10,34 +10,11 @@ import Split from "./split.js"
 const $window = $(window)
 const $html = $("html")
 
-$("#controls-dialog").dialog({
-	show: "drop",
-	hide: "drop",
-	width: "25em",
-	buttons: [{
-		text: "Got it!",
-		click: function() {
-			$(this).dialog("close")
-		}
-	}]
-}).tooltip()
-
 const $jconstantText = $("#julia-constant-text")
 
 function updateJConstantText() {
 	$jconstantText.text(`Showing Julia set for c = ${Julia.constant.real} + ${Julia.constant.imag}i`)
 }
-
-let maxIterations = 200
-const SCROLL_COEFF = 0.05
-const ZOOM_COEFF = 1.1
-
-const $iterationText = $("#iteration-text")
-
-function updateIterationText() {
-	$iterationText.text(`Iteration count = ${maxIterations}`)
-}
-updateIterationText()
 
 const palette = getPalette([
 	[0, 0x000000],
@@ -113,6 +90,10 @@ initFractal(Julia, "#julia-canvas", {
 	imag: -0.09
 })
 
+let maxIterations = 200
+const SCROLL_COEFF = 0.05
+const ZOOM_COEFF = 1.1
+
 function resizeCanvas(fractal) {
 	const {
 		$canvas,
@@ -169,6 +150,10 @@ function render({
 	bounds,
 	constant
 }) {
+	if (bounds.overCanvas < 1.1920929e-7)
+		console.log(`unrounded: ${bounds.overCanvas.toString(2)}
+rounded:     ${Math.fround(bounds.overCanvas).toString(2)}`)
+
 	gl.uniform1f(uniforms.realMin, bounds.real.min)
 	gl.uniform1f(uniforms.imagMin, bounds.imag.min)
 	gl.uniform1f(uniforms.overCanvas, bounds.overCanvas)
@@ -188,7 +173,6 @@ function getZFromPixel({
 	}
 }
 
-// @bug iteration count increases for each fractal
 function initKeydown(fractal) {
 	const {
 		bounds
@@ -226,7 +210,6 @@ function initKeydown(fractal) {
 				break
 			case 48: // 0
 				maxIterations = 1000
-				updateIterationText()
 				break
 			case 49:
 			case 50:
@@ -238,16 +221,12 @@ function initKeydown(fractal) {
 			case 56:
 			case 57: // 1-9
 				maxIterations = (evt.which - 48) * 100
-				updateIterationText()
 				break
 			case 187: // +
 				maxIterations += 100
-				console.log(maxIterations)
-				updateIterationText()
 				break
 			case 189: // -
 				maxIterations -= 100
-				updateIterationText()
 				break
 		}
 
