@@ -13,17 +13,20 @@ const $html = $("html")
 const $iterationText = $("#iteration-text")
 const $jconstantText = $("#julia-constant-text")
 
-$("#controls-dialog").dialog({
-	show: "drop",
-	hide: "drop",
-	width: "25em",
-	buttons: [{
-		text: "Got it!",
-		click: function() {
-			$(this).dialog("close")
-		}
-	}]
-}).tooltip()
+const $controlsDialog = $("#controls-dialog")
+setTimeout(() => {
+	$controlsDialog.dialog({
+		width: "25em",
+		buttons: [{
+			text: "Got it!",
+			click: () => {
+				$controlsDialog.dialog("close")
+			}
+		}],
+		show: "scale",
+		hide: "puff"
+	}).tooltip()
+}, 250)
 
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
