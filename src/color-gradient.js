@@ -10,9 +10,9 @@ export default function getPalette(colorStops, numColors) {
 		offsets.push(colorStop[0])
 
 		const hexColor = colorStop[1]
-		reds.push((hexColor >> 16 & 255) / 255)
-		greens.push((hexColor >> 8 & 255) / 255)
-		blues.push((hexColor & 255) / 255)
+		reds.push(hexColor >> 16 & 255)
+		greens.push(hexColor >> 8 & 255)
+		blues.push(hexColor & 255)
 	}
 
 	const redInterpolant = createInterpolant(offsets, reds)
@@ -23,10 +23,10 @@ export default function getPalette(colorStops, numColors) {
 	const increment = 1 / numColors
 
 	for (let i = 0; i < 1; i += increment) {
-		palette.push(redInterpolant(i), greenInterpolant(i), blueInterpolant(i), 255)
+		palette.push(redInterpolant(i), greenInterpolant(i), blueInterpolant(i))
 	}
 
-	return palette
+	return new Uint8Array(palette)
 }
 
 // https://en.wikipedia.org/wiki/Monotone_cubic_interpolation

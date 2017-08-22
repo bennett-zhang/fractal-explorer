@@ -3,6 +3,7 @@ import {
 	initGl,
 	initProgram,
 	getUniforms,
+	initTexture,
 	renderGl
 } from "./webgl-utils.js"
 import Split from "split.js"
@@ -26,7 +27,7 @@ setTimeout(() => {
 		show: "scale",
 		hide: "puff"
 	}).tooltip()
-}, 250)
+}, 500)
 
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
@@ -45,7 +46,7 @@ const palette = getPalette([
 	[0.8, 0x245b9a],
 	[0.9, 0x071146],
 	[1, 0x000000]
-], 512)
+], 2048)
 
 const Mandelbrot = initFractal("#mandelbrot-canvas", {
 	real: {
@@ -102,7 +103,8 @@ function initFractal(canvasSelector, bounds, jconstant) {
 		fractal.gl.uniform1i(fractal.uniforms.isJulia, true)
 		fractal.constant = jconstant
 	}
-	fractal.gl.uniform4fv(fractal.uniforms.palette, palette)
+	initTexture(fractal, palette)
+	fractal.gl.uniform1i(fractal.uniforms.palette, 0)
 	return fractal
 }
 

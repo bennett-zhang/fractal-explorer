@@ -16,9 +16,8 @@ uniform int maxIterations;
 const float BAILOUT_RADIUS = 4.0;
 uniform bool isJulia;
 uniform vec2 jconstant;
-const int NUM_COLORS = 512;
-uniform vec4 palette[NUM_COLORS];
-const float GRADIENT_SCALE = float(NUM_COLORS) / 32.0;
+uniform sampler2D palette;
+const float GRADIENT_SCALE = 0.03125;
 
 vec4 getFractalColor(vec2 z) {
 	vec2 zSq;
@@ -39,13 +38,7 @@ vec4 getFractalColor(vec2 z) {
 			}
 
 			float mu = float(i) + 1.0 - log2(log(zSq.x + zSq.y) / 2.0);
-			int index = int(mod(mu * GRADIENT_SCALE, float(NUM_COLORS)));
-
-			for (int j = 0; j < NUM_COLORS; j++) {
-				if (j == index) {
-					return palette[j];
-				}
-			}
+			return texture2D(palette, vec2(mu * GRADIENT_SCALE, 0.0));
 		}
 
 		if (i > maxIterations) return vec4(0, 0, 0, 1);
@@ -139,6 +132,17 @@ export function getUniforms({
 		uniforms[name] = gl.getUniformLocation(program, name)
 	}
 	return uniforms
+}
+
+export function initTexture({
+	gl
+}, palette) {
+	const texture = gl.createTexture()
+	gl.bindTexture(gl.TEXTURE_2D, texture)
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, palette.length / 3, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, palette)
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+	return texture
 }
 
 export function renderGl(gl) {
