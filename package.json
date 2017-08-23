@@ -26,7 +26,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"express": "^4.15.4",
-		"split.js": "^1.3.5"
+		"split.js": "^1.3.5",
+		"hammerjs": "^2.0.8"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.26.0",

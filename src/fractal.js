@@ -7,6 +7,7 @@ import {
 	renderGl
 } from "./webgl-utils.js"
 import Split from "split.js"
+import "hammerjs"
 
 const $window = $(window)
 const $html = $("html")
@@ -373,3 +374,19 @@ function initWheel(fractal) {
 }
 initWheel(Mandelbrot)
 initWheel(Julia)
+
+function initPinch(fractal) {
+	const {
+		canvas,
+		bounds
+	} = fractal
+	const h = new Hammer(canvas)
+	h.get("pinch").set({
+		enable: true
+	})
+	h.on("pinch", evt => {
+		alert(0)
+	})
+}
+initPinch(Mandelbrot)
+initPinch(Julia)
