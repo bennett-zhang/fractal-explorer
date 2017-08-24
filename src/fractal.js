@@ -377,6 +377,7 @@ initWheel(Julia)
 
 function initPinch(fractal) {
 	const {
+		$canvas,
 		canvas,
 		bounds
 	} = fractal
@@ -385,7 +386,35 @@ function initPinch(fractal) {
 		enable: true
 	})
 	h.on("pinch", evt => {
-		alert(0)
+		evt.preventDefault()
+
+		const offset = $canvas.offset()
+		const mouseX = evt.center.x - offset.left
+		const mouseY = evt.center.y - offset.top
+
+		console.log(evt.scale / evt.deltaTime)
+
+		/*const deltaY = evt.deltaY
+
+		if (deltaY < 0) {
+			bounds.real.range /= ZOOM_COEFF
+			bounds.imag.range /= ZOOM_COEFF
+		} else {
+			bounds.real.range *= ZOOM_COEFF
+			bounds.imag.range *= ZOOM_COEFF
+		}
+
+		const pmouseZ = getZFromPixel(fractal, mouseX, mouseY)
+
+		calculateBounds(fractal)
+
+		const mouseZ = getZFromPixel(fractal, mouseX, mouseY)
+
+		bounds.real.mid -= mouseZ.real - pmouseZ.real
+		bounds.imag.mid -= mouseZ.imag - pmouseZ.imag
+
+		calculateBounds(fractal)
+		render(fractal)*/
 	})
 }
 initPinch(Mandelbrot)
