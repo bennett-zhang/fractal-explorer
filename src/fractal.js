@@ -15,21 +15,6 @@ const $html = $("html")
 const $iterationText = $("#iteration-text")
 const $jconstantText = $("#julia-constant-text")
 
-const $controlsDialog = $("#controls-dialog")
-setTimeout(() => {
-	$controlsDialog.dialog({
-		width: "25em",
-		buttons: [{
-			text: "Got it!",
-			click: () => {
-				$controlsDialog.dialog("close")
-			}
-		}],
-		show: "scale",
-		hide: "puff"
-	}).tooltip()
-}, 500)
-
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
 
@@ -194,6 +179,44 @@ function getZFromPixel({
 	}
 }
 
+function isTouchDevice() {
+	return "ontouchstart" in window
+}
+
+if (isTouchDevice()) {
+	initPan(Mandelbrot)
+	initPan(Julia)
+
+	initPinch(Mandelbrot)
+	initPinch(Julia)
+} else {
+	initKeydownBounds(Mandelbrot)
+	initKeydownBounds(Julia)
+
+	initKeydownIterations()
+
+	initMouseDown(Mandelbrot)
+	initMouseDown(Julia)
+
+	initWheel(Mandelbrot)
+	initWheel(Julia)
+
+	const $controlsDialog = $("#controls-dialog")
+	setTimeout(() => {
+		$controlsDialog.dialog({
+			width: "25em",
+			buttons: [{
+				text: "Got it!",
+				click: () => {
+					$controlsDialog.dialog("close")
+				}
+			}],
+			show: "scale",
+			hide: "puff"
+		}).tooltip()
+	}, 300)
+}
+
 function initKeydownBounds(fractal) {
 	const {
 		bounds
@@ -233,8 +256,6 @@ function initKeydownBounds(fractal) {
 		render(fractal)
 	})
 }
-initKeydownBounds(Mandelbrot)
-initKeydownBounds(Julia)
 
 function initKeydownIterations() {
 	$window.keydown(evt => {
@@ -264,7 +285,6 @@ function initKeydownIterations() {
 		render(Julia)
 	})
 }
-initKeydownIterations()
 
 function initMouseDown(fractal) {
 	const {
@@ -326,8 +346,6 @@ function initMouseDown(fractal) {
 		$window.mouseup(mouseup)
 	})
 }
-initMouseDown(Mandelbrot)
-initMouseDown(Julia)
 
 function initWheel(fractal) {
 	const {
@@ -362,8 +380,8 @@ function initWheel(fractal) {
 
 		const mouseZ = getZFromPixel(fractal, mouseX, mouseY)
 
-		bounds.real.mid -= mouseZ.real - pmouseZ.real
-		bounds.imag.mid -= mouseZ.imag - pmouseZ.imag
+		bounds.real.mid += pmouseZ.real - mouseZ.real
+		bounds.imag.mid += pmouseZ.imag - mouseZ.imag
 
 		calculateBounds(fractal)
 		render(fractal)
@@ -372,8 +390,46 @@ function initWheel(fractal) {
 		$.data($canvas, "scrollTimer", setTimeout(() => $html.removeClass("zoom-in zoom-out"), 250))
 	})
 }
-initWheel(Mandelbrot)
-initWheel(Julia)
+
+function initPan(fractal) {
+	const {
+		$canvas,
+		canvas,
+		bounds
+	} = fractal
+
+	const h = new Hammer(canvas)
+	h.get("pan").set({
+		pointers: 0,
+		threshold: 0,
+		direction: Hammer.DIRECTION_ALL
+	})
+
+	const pdelta = {
+		x: null,
+		y: null
+	}
+
+	h.on("panstart", evt => {
+		evt.preventDefault()
+
+		pdelta.x = evt.deltaX
+		pdelta.y = evt.deltaY
+	})
+
+	h.on("pan", evt => {
+		evt.preventDefault()
+
+		bounds.real.mid -= (evt.deltaX - pdelta.x) * bounds.overCanvas
+		bounds.imag.mid += (evt.deltaY - pdelta.y) * bounds.overCanvas
+
+		pdelta.x = evt.deltaX
+		pdelta.y = evt.deltaY
+
+		calculateBounds(fractal)
+		render(fractal)
+	})
+}
 
 function initPinch(fractal) {
 	const {
@@ -393,6 +449,8 @@ function initPinch(fractal) {
 	}
 
 	h.on("pinchstart", evt => {
+		evt.preventDefault()
+
 		prange.real = bounds.real.range
 		prange.imag = bounds.imag.range
 	})
@@ -404,9 +462,6 @@ function initPinch(fractal) {
 		const centerX = evt.center.x - offset.left
 		const centerY = evt.center.y - offset.top
 
-		console.log("x " + centerX)
-		console.log("y " + centerY)
-
 		bounds.real.range = prange.real / evt.scale
 		bounds.imag.range = prange.imag / evt.scale
 
@@ -416,12 +471,10 @@ function initPinch(fractal) {
 
 		const centerZ = getZFromPixel(fractal, centerX, centerY)
 
-		bounds.real.mid -= centerZ.real - pcenterZ.real
-		bounds.imag.mid -= centerZ.imag - pcenterZ.imag
+		bounds.real.mid += pcenterZ.real - centerZ.real
+		bounds.imag.mid += pcenterZ.imag - centerZ.imag
 
 		calculateBounds(fractal)
 		render(fractal)
 	})
 }
-initPinch(Mandelbrot)
-initPinch(Julia)
