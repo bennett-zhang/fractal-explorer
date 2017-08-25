@@ -381,40 +381,46 @@ function initPinch(fractal) {
 		canvas,
 		bounds
 	} = fractal
+
 	const h = new Hammer(canvas)
 	h.get("pinch").set({
 		enable: true
 	})
+
+	const prange = {
+		real: null,
+		imag: null
+	}
+
+	h.on("pinchstart", evt => {
+		prange.real = bounds.real.range
+		prange.imag = bounds.imag.range
+	})
+
 	h.on("pinch", evt => {
 		evt.preventDefault()
 
 		const offset = $canvas.offset()
-		const mouseX = evt.center.x - offset.left
-		const mouseY = evt.center.y - offset.top
+		const centerX = evt.center.x - offset.left
+		const centerY = evt.center.y - offset.top
 
-		console.log(evt.scale / evt.deltaTime)
+		console.log("x " + centerX)
+		console.log("y " + centerY)
 
-		/*const deltaY = evt.deltaY
+		bounds.real.range = prange.real / evt.scale
+		bounds.imag.range = prange.imag / evt.scale
 
-		if (deltaY < 0) {
-			bounds.real.range /= ZOOM_COEFF
-			bounds.imag.range /= ZOOM_COEFF
-		} else {
-			bounds.real.range *= ZOOM_COEFF
-			bounds.imag.range *= ZOOM_COEFF
-		}
-
-		const pmouseZ = getZFromPixel(fractal, mouseX, mouseY)
+		const pcenterZ = getZFromPixel(fractal, centerX, centerY)
 
 		calculateBounds(fractal)
 
-		const mouseZ = getZFromPixel(fractal, mouseX, mouseY)
+		const centerZ = getZFromPixel(fractal, centerX, centerY)
 
-		bounds.real.mid -= mouseZ.real - pmouseZ.real
-		bounds.imag.mid -= mouseZ.imag - pmouseZ.imag
+		bounds.real.mid -= centerZ.real - pcenterZ.real
+		bounds.imag.mid -= centerZ.imag - pcenterZ.imag
 
 		calculateBounds(fractal)
-		render(fractal)*/
+		render(fractal)
 	})
 }
 initPinch(Mandelbrot)
