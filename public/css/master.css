@@ -21,6 +21,12 @@ html, body {
 	cursor: zoom-out !important;
 }
 
+@media screen and (max-width: 550px) {
+	.github-fork-ribbon {
+		display: none;
+	}
+}
+
 .github-fork-ribbon:before {
 	background-color: #dd8944;
 }
