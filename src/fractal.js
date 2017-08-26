@@ -100,7 +100,7 @@ function updateIterationText() {
 updateIterationText()
 
 function updateJConstantText() {
-	$jconstantText.text(`Showing Julia set for c = ${Julia.constant.real} + ${Julia.constant.imag}i`)
+	$jconstantText.text(`Julia set for c = ${Julia.constant.real} + ${Julia.constant.imag}i`)
 }
 updateJConstantText()
 
@@ -118,17 +118,18 @@ function resizeCanvas(fractal) {
 	render(fractal)
 }
 
-function resizeCanvases() {
+function resize() {
+	$html.css("font-size", 0.0075 * $html.width() + 6)
 	resizeCanvas(Mandelbrot)
 	resizeCanvas(Julia)
 }
-$(resizeCanvases)
-$window.resize(resizeCanvases)
+$(resize)
+$window.resize(resize)
 
 Split(["#mandelbrot-canvas-wrapper", "#julia-canvas-wrapper"], {
 	direction: "horizontal",
 	cursor: "col-resize",
-	onDrag: resizeCanvases
+	onDrag: resize
 })
 
 function calculateBounds({
@@ -214,7 +215,7 @@ if (isTouchDevice()) {
 			show: "scale",
 			hide: "puff"
 		}).tooltip()
-	}, 300)
+	}, 500)
 }
 
 function initKeydownBounds(fractal) {
