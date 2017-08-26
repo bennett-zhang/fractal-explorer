@@ -324,11 +324,11 @@ function initMouseDown(fractal) {
 			} else {
 				const pmouseZ = getZFromPixel(fractal, pmouseX, pmouseY)
 
-				pmouseX = mouseX
-				pmouseY = mouseY
-
 				bounds.real.mid += pmouseZ.real - mouseZ.real
 				bounds.imag.mid += pmouseZ.imag - mouseZ.imag
+
+				pmouseX = mouseX
+				pmouseY = mouseY
 
 				calculateBounds(fractal)
 				render(fractal)
@@ -444,6 +444,8 @@ function initPinch(fractal) {
 		enable: true
 	})
 
+	let offset
+
 	const prange = {
 		real: null,
 		imag: null
@@ -452,6 +454,8 @@ function initPinch(fractal) {
 	h.on("pinchstart", evt => {
 		evt.preventDefault()
 
+		offset = $canvas.offset()
+
 		prange.real = bounds.real.range
 		prange.imag = bounds.imag.range
 	})
@@ -459,7 +463,6 @@ function initPinch(fractal) {
 	h.on("pinch", evt => {
 		evt.preventDefault()
 
-		const offset = $canvas.offset()
 		const centerX = evt.center.x - offset.left
 		const centerY = evt.center.y - offset.top
 
