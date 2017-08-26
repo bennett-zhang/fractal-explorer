@@ -127,6 +127,7 @@ $(resize)
 $window.resize(resize)
 
 Split(["#mandelbrot-canvas-wrapper", "#julia-canvas-wrapper"], {
+	minSize: 50,
 	direction: "horizontal",
 	cursor: "col-resize",
 	onDrag: resize
