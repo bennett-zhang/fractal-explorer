@@ -205,19 +205,20 @@ if (isTouchDevice()) {
 	initWheel(Julia)
 
 	const $controlsDialog = $("#controls-dialog")
-	setTimeout(() => {
-		$controlsDialog.dialog({
-			width: "25em",
-			buttons: [{
-				text: "Got it!",
-				click: () => {
-					$controlsDialog.dialog("close")
-				}
-			}],
-			show: "scale",
-			hide: "puff"
-		}).tooltip()
-	}, 500)
+	$controlsDialog.dialog({
+		width: "25em",
+		buttons: [{
+			text: "Got it!",
+			click: () => {
+				$controlsDialog.dialog("close")
+			}
+		}],
+		autoOpen: false,
+		show: "scale",
+		hide: "puff"
+	}).tooltip().ready(evt => {
+		$controlsDialog.dialog("open")
+	})
 }
 
 function initKeydownBounds(fractal) {
