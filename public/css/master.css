@@ -32,8 +32,11 @@ html, body {
 	background-color: #dd8944;
 }
 
-.split.split-horizontal, .gutter.gutter-horizontal {
+.split {
 	position: relative;
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal {
 	height: 100%;
 	float: left;
 }

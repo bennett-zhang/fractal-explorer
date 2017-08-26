@@ -15,10 +15,12 @@ const $html = $("html")
 const $iterationText = $("#iteration-text")
 const $jconstantText = $("#julia-constant-text")
 
+const $controlsDialog = $("#controls-dialog")
+
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
 
-let maxIterations = 200
+let maxIterations = 300
 
 const palette = getPalette([
 	[0, 0x000000],
@@ -118,10 +120,20 @@ function resizeCanvas(fractal) {
 	render(fractal)
 }
 
-function resize() {
-	$html.css("font-size", 0.0075 * $html.width() + 6)
+function resizeCanvases() {
 	resizeCanvas(Mandelbrot)
 	resizeCanvas(Julia)
+}
+
+function resize() {
+	$html.css("font-size", 0.0075 * $html.width() + 6)
+	$controlsDialog.dialog("option", "position", {
+		my: "center",
+		at: "center",
+		of: window
+	})
+	$controlsDialog.dialog("option", "maxHeight", $html.height())
+	resizeCanvases()
 }
 $(resize)
 $window.resize(resize)
@@ -131,7 +143,7 @@ Split(["#mandelbrot-canvas-wrapper", "#julia-canvas-wrapper"], {
 	gutterSize: 13,
 	direction: "horizontal",
 	cursor: "col-resize",
-	onDrag: resize
+	onDrag: resizeCanvases
 })
 
 function calculateBounds({
@@ -204,7 +216,6 @@ if (isTouchDevice()) {
 	initWheel(Mandelbrot)
 	initWheel(Julia)
 
-	const $controlsDialog = $("#controls-dialog")
 	$controlsDialog.dialog({
 		width: "25em",
 		buttons: [{
@@ -214,6 +225,7 @@ if (isTouchDevice()) {
 			}
 		}],
 		autoOpen: false,
+		resizable: false,
 		show: "scale",
 		hide: "puff"
 	}).tooltip().ready(evt => {
