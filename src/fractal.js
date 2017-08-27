@@ -381,11 +381,13 @@ function initWheel(fractal) {
 			bounds.real.range /= ZOOM_COEFF
 			bounds.imag.range /= ZOOM_COEFF
 
+			$html.removeClass("zoom-in zoom-out")
 			$html.addClass("zoom-in")
 		} else {
 			bounds.real.range *= ZOOM_COEFF
 			bounds.imag.range *= ZOOM_COEFF
 
+			$html.removeClass("zoom-in zoom-out")
 			$html.addClass("zoom-out")
 		}
 
