@@ -28,11 +28,10 @@ $controlsDialog.dialog({
 	resizable: false,
 	show: "scale",
 	hide: "puff"
-}).tooltip().ready(evt => {
-	setTimeout(() => {
-		$controlsDialog.dialog("open")
-	}, 200)
-})
+}).tooltip()
+setTimeout(() => {
+	$controlsDialog.dialog("open")
+}, 500)
 
 const SCROLL_COEFF = 0.05
 const ZOOM_COEFF = 1.1
