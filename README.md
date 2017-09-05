@@ -5,6 +5,7 @@ Explore the Mandelbrot set and its corresponding Julia sets through lightning fa
 - Support for mobile devices and touch screens
 - Intuitive panning and zooming
 - Seamless transitions between nearby Julia sets
+- Emulates double precision for deep zooms
 
 ## Controls
 

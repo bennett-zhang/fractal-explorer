@@ -14,14 +14,6 @@ html, body {
 	cursor: all-scroll !important;
 }
 
-.zoom-in * {
-	cursor: zoom-in !important;
-}
-
-.zoom-out * {
-	cursor: zoom-out !important;
-}
-
 @media screen and (max-width: 550px) {
 	.github-fork-ribbon {
 		display: none;

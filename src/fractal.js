@@ -94,8 +94,11 @@ function initFractal(canvasSelector, bounds, jconstant) {
 	fractal.gl = initGl(fractal)
 	fractal.program = initProgram(fractal)
 	fractal.uniforms = getUniforms(fractal, [
+		"doublePrecision",
 		"realMin",
+		"realMinD",
 		"imagMin",
+		"imagMinD",
 		"maxIterations",
 		"isJulia",
 		"jconstant",
@@ -191,8 +194,15 @@ function render({
 	bounds,
 	constant
 }) {
-	gl.uniform1f(uniforms.realMin, bounds.real.min)
-	gl.uniform1f(uniforms.imagMin, bounds.imag.min)
+	if (bounds.overCanvas > 2.38418579e-7) {
+		gl.uniform1i(uniforms.doublePrecision, false)
+		gl.uniform1f(uniforms.realMin, bounds.real.min)
+		gl.uniform1f(uniforms.imagMin, bounds.imag.min)
+	} else {
+		gl.uniform1i(uniforms.doublePrecision, true)
+		gl.uniform2f(uniforms.realMinD, bounds.real.min, bounds.real.min - Math.fround(bounds.real.min))
+		gl.uniform2f(uniforms.imagMinD, bounds.imag.min, bounds.imag.min - Math.fround(bounds.imag.min))
+	}
 	gl.uniform1f(uniforms.overCanvas, bounds.overCanvas)
 	gl.uniform1i(uniforms.maxIterations, maxIterations)
 	if (constant)
@@ -380,15 +390,9 @@ function initWheel(fractal) {
 		if (deltaY < 0) {
 			bounds.real.range /= ZOOM_COEFF
 			bounds.imag.range /= ZOOM_COEFF
-
-			$html.removeClass("zoom-in zoom-out")
-			$html.addClass("zoom-in")
 		} else {
 			bounds.real.range *= ZOOM_COEFF
 			bounds.imag.range *= ZOOM_COEFF
-
-			$html.removeClass("zoom-in zoom-out")
-			$html.addClass("zoom-out")
 		}
 
 		const offset = $canvas.offset()
@@ -406,9 +410,6 @@ function initWheel(fractal) {
 
 		calculateBounds(fractal)
 		render(fractal)
-
-		clearTimeout($.data($canvas, "scrollTimer"))
-		$.data($canvas, "scrollTimer", setTimeout(() => $html.removeClass("zoom-in zoom-out"), 250))
 	})
 }
 initWheel(Mandelbrot)
